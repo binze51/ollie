@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "_common/gotag/options.proto";
+import "google/protobuf/timestamp.proto";
+
+package authx;
+option go_package = "ollie/kitex_gen/authx;authx";
+
+

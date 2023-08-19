@@ -1,0 +1,9 @@
+version: v1
+managed:
+  enabled: false
+plugins:
+  - name: gotag #buf generate --template buf.gen.tag.yaml --path proto/authx/ 只处理服务目录-最后一次执行
+    out: .
+    opt: 
+      - outdir=kitex_gen #proto_gen
+      - paths=source_relative,xxx=gorm+"-" bson+"-"

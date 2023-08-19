@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package jwt;
+
+option go_package = "ollie/kitex_gen/_commton/jwt;jwt";
+
+service WechatWorkerService {
+    rpc GetLoginQR(GetLoginQRRequest) returns (GetLoginQRResponse) {}
+
+    rpc GetJwtToken(GetJwtTokenRequest) returns (GetJwtTokenResponse) {}
+
+    rpc RefreshJwtToken(RefreshJwtTokenRequest) returns (RefreshJwtTokenResponse) {}
+
+    rpc ParseJwtToken(ParseJwtTokenRequest) returns (ParseJwtTokenResponse) {}
+}
+
+message JwtPayload {
+    string userName = 1;
+    string phone = 2;
+    uint64 expired_time = 3;
+    string jwt_token =4;
+
+}
+
+message GetLoginQRRequest {
+    string redirect_url = 1;
+    LoginType login_type = 2;
+}
+
+message GetLoginQRResponse {
+    string url = 1;
+}
+
+message GetJwtTokenRequest {
+    string callback_code = 1;
+}
+
+
+message GetJwtTokenResponse{
+    JwtPayload jwtplayload = 1;
+}
+
+message RefreshJwtTokenRequest {
+    string jwt_token = 1;
+}
+
+message RefreshJwtTokenResponse {
+    JwtPayload jwtplayload = 1;
+}
+
+message ParseJwtTokenRequest {
+    string jwt_token = 1;
+}
+
+message ParseJwtTokenResponse {
+    JwtPayload jwtplayload = 1;
+}
+
+message WechatWorkerUser {
+    string username = 1;
+    string phone = 2;
+}
+
+message WechatWorkerAPP {
+    string access_token = 1;
+    string corpid = 2;
+    string secret = 3;
+    string agentid = 4;
+}
+
+message WxWorkerLogin {
+    string corp_id = 1;
+    string redirect_url = 2;
+    int64 agent_id = 3;
+    string login_type = 4;
+    string Secret = 5;
+
+}
+
+enum LoginType {
+    Login_Type_UNSPECIFIED = 0;
+    Login_Type_ServiceAPP = 1;
+    Login_Type_CorpApp = 2;
+}

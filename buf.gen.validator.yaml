@@ -1,0 +1,9 @@
+version: v1
+managed:
+  enabled: false
+plugins:
+  - plugin: validator ##buf generate --template buf.gen.validator.yaml --path proto/authx/ 只处理服务目录-最后一次执行
+    out: kitex_gen
+    opt: 
+      - func=fix_length=proto/_common/validtor/fix_length.txt
+      - paths=source_relative

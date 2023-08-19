@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package respstatus;
+import "google/protobuf/any.proto";
+
+option go_package = "ollie/kitex_gen/_common/respstatus;respstatus";
+
+message StatusResp {  
+    uint32 code = 1; // 状态码，0-success，其他值-fail
+    string msg = 2; // 返回状态描述
+}

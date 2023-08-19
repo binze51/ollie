@@ -1,0 +1,7 @@
+# .vscode
+kitex_gen/
+
+**/config.yaml
+**/rbac_model.conf
+all.pb
+*.log

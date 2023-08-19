@@ -1,0 +1,88 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "_common/gotag/options.proto";
+
+package authx;
+option go_package = "ollie/kitex_gen/authx;authx";
+
+service AuthxService {}
+
+message JwtPayload {
+  string userName = 1;
+  string phone = 2;
+  uint64 expired_time = 3;
+  string jwt_token =4;
+
+}
+
+message FetchLoginQRRequest {
+  string redirect_url = 1;
+  LoginType login_type = 2;
+}
+
+message FetchLoginQRResponse {
+  string url = 1;
+}
+
+message FetchJwtTokenRequest {
+  string callback_code = 1;
+}
+
+
+message FetchJwtTokenResponse{
+  JwtPayload jwtplayload = 1;
+}
+
+message RefreshJwtTokenRequest {
+  string jwt_token = 1;
+}
+
+message RefreshJwtTokenResponse {
+  JwtPayload jwtplayload = 1;
+}
+
+message ParseJwtTokenRequest {
+  string jwt_token = 1;
+}
+
+message ParseJwtTokenResponse {
+  JwtPayload jwtplayload = 1;
+}
+
+message WechatWorkerUser {
+  string username = 1;
+  string phone = 2;
+}
+
+message WechatWorkerAPP {
+  string access_token = 1;
+  string corpid = 2;
+  string secret = 3;
+  string agentid = 4;
+}
+
+message WxWorkerLogin {
+  string corp_id = 1;
+  string redirect_url = 2;
+  int64 agent_id = 3;
+  string login_type = 4;
+  string Secret = 5;
+
+}
+
+enum LoginType {
+  Login_Type_UNSPECIFIED = 0;
+  Login_Type_ServiceAPP = 1;
+  Login_Type_CorpApp = 2;
+}
+
+
+//时间通用
+message TimeAT {
+  int64 update_at = 1 [(gotag.tags) = 'gorm:"autoUpdateTime:milli"'];
+  int64 create_at = 2 [(gotag.tags) = 'gorm:"autoCreateTime"'];
+  int64 delete_at = 3;
+}

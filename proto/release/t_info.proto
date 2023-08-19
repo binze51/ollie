@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package release;
+
+import "_common/gotag/options.proto";
+import "google/protobuf/timestamp.proto";
+import "release/vo.proto";
+
+option go_package = "ollie/kitex_gen/release;release";
+
+// Release  表/vo
+message X_Release {
+  optional uint64 id = 1 [(gotag.tags) = 'gorm:"primaryKey"'];
+  string name =2; //发布计划名字
+  string creator =3;
+  string flow_status =4; //实时自身状态
+  bool is_running =5; //调度器执行状态
+  int32 sched_weight=6;
+  repeated SelectedServiceVersionList selected_service_version =7 [(gotag.tags) = 'gorm:"serializer:json"'];
+  NameSpaceType env_type = 8;
+  int32 update_cideploy_count = 9; //更新cideploy次数累加，和CIBuildService 聚合count比对
+  // uint32 rollout_vs_count = 8; //更新vs次数累加，和ReleaseWebOpLogs 聚合count比对，同步操作不用记录
+  // 如果是自动重试次数超过限制 则web操作端提供deploy按钮或remove按钮进一步手动处理
+  int32 cideploy_faild_count=10; //ci更新失败重试最大次数，值 来源配置文件或后期的字典配置表 聚合ReleaseWebOpLogs来比对阻塞
+  TimeAT time_at = 100 [(gotag.tags) = 'gorm:"embedded"'];
+}
+
+
+// ReleaseWebOpLogs  表/vo
+message X_ReleaseWebOpLog {
+  optional uint64 id = 1 [(gotag.tags) = 'gorm:"primaryKey"'];
+  string release_id = 2;
+  string operate_status =3;
+  string operate_type=4; //web端api操作类型：部署，删除，灰度，全量 ，更新配置，回滚 最新一条为release的最新实时状态
+  string operate_parameter_jsonstr =5;
+  bool is_done=6;
+  repeated RoutePolicyRule route_policy_rule=7; //可选 当ot类型为灰度时才会存在，部署配置的灰度企业组集合
+
+  TimeAT time_at = 100;
+}
+
+// CIBuildService 表/vo
+message X_CIBuildService {
+  optional uint64 id = 1 [(gotag.tags) = 'gorm:"primaryKey"'];
+  string svc_name = 2; //服务名称
+  string version = 3;
+  string container_image=4;
+  string mono_name=5; // 可选 当是大仓时 存在
+  CIEndType ci_end_type = 6; //前后端区分标记
+  string branch_name = 7; //gitlab分支名称
+  string build_commit = 8; //gitlab 构建commit hash
+  TimeAT time_at = 100;
+}

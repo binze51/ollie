@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package release;
+
+import "_common/gotag/options.proto";
+
+option go_package = "ollie/kitex_gen/release;release";
+
+
+//时间通用
+message TimeAT {
+	int64 update_at = 1 [(gotag.tags) = 'gorm:"autoUpdateTime:milli"'];
+	int64 create_at = 2 [(gotag.tags) = 'gorm:"autoCreateTime"'];
+	int64 delete_at = 3; //非零则被删除
+}
+  
+message SelectedServiceVersionList {
+	string svc_name=1;
+	string version=2;
+	int32 rc =3;
+	string container_image =4;
+	bool auto_update =5;
+}
+  
+//前后端协同部署配置
+message UNIONReleaseConfig {
+  BEReleaseConfig be_release_config = 1; //注：后端如果使用ceres mono模式时列表只提供一个对象
+  FEReleaseConfig fe_release_config = 2;
+}
+
+//后端独立部署配置
+message BEReleaseConfig {
+  repeated SelectedSvcConfig config_list = 1;
+}
+
+//流控配置
+message RoutePolicyRule {
+  string group_id = 1;
+}
+
+
+message CIDeployConfig {
+  string svc_name = 1;
+  string version = 2;
+  string dir_version = 3; //dir_version 和 version 冗余二选一
+  string memory_requestuests = 4; //可选，空则默认值
+  string memory_limits = 5; //可选，空则默认值
+  string cpu_requestuests = 6; //可选，空则默认值
+  string cpu_limits = 7; //可选，空则默认值
+  string image_tag = 8; //渲染使用，前端不填
+  string replicas = 9; //可选，空则默认值
+}
+
+message SelectedSvcConfig {
+  string svc_name = 1;
+  string version = 2;
+}
+message ReleaseFlowStepInfo {
+  string step_name = 1; //gen ,gitpush ,deploy
+  bool step_failed = 2; //失败标记
+  string step_failed_des=3; //失败描述
+}
+
+enum NameSpaceType {
+  NAME_SPACE_TYPE_UNSPECIFIED = 0;
+  NAME_SPACE_TYPE_PRODUCTION = 1;
+  NAME_SPACE_TYPE_STAGING = 2;
+}
+
+// CIEndType
+enum CIEndType {
+  CI_END_TYPE_UNSPECIFIED = 0;
+  CI_END_TYPE_FE = 1; //前端
+  CI_END_TYPE_BE = 2; //后端
+}
+
+// ReleaseType
+enum ReleaseType {
+  RELEASE_TYPE_UNSPECIFIED = 0;
+  RELEASE_TYPE_FE = 1;
+  RELEASE_TYPE_BE = 2;
+  RELEASE_TYPE_UNION = 3;
+}
+
+enum ReleaseStatus {
+  RELEASE_STATUS_UNSPECIFIED = 0;
+  RELEASE_STATUS_UNDEPLOYED = 1; // 未部署
+  RELEASE_STATUS_ABORTED = 2; // 部署异常中止
+  RELEASE_STATUS_DEPLOYED = 3; // 部署就绪
+  RELEASE_STATUS_STAGING = 4; // 灰度中
+  RELEASE_STATUS_TO_PRIMARY = 5; // 全量中
+  RELEASE_STATUS_PRIMARY = 6; // 已全量
+  RELEASE_STATUS_HISTORICAL = 7; // 全量历史存档
+  RELEASE_STATUS_REMOVED_ARCHIVE = 8; // 主动删除归档
+  RELEASE_STATUS_TO_ROLLBACK = 9; //回滚中
+  RELEASE_STATUS_PRIMARY_ARCHIVE = 10; // 回滚删除归档
+
+  // 调度状态
+  RELEASE_STATUS_SCHEDULING_STATE_WAITING = 11; //等待执行
+  RELEASE_STATUS_SCHEDULING_STATE_DOING= 12; //正在执行
+  RELEASE_STATUS_SCHEDULING_STATE_DONE= 13; //执行完成
+
+}
+
+//前端独立部署配置
+message FEReleaseConfig {
+  repeated SelectedSvcConfig config_list = 1;
+}

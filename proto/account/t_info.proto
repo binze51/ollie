@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "_common/gotag/options.proto";
+import "_common/validtor/validtor.proto";
+import "google/protobuf/timestamp.proto";
+import "account/vo.proto";
+
+package account;
+option go_package = "ollie/kitex_gen/account;account";
+
+
+// Account 表/vo
+message Account {
+    enum Type {
+        TYPE_UNSPECIFIED = 0;
+        TYPE_PUBLIC      = 1;
+        TYPE_PRIVATE     = 2;
+    }
+
+    enum Status {
+        STATUS_UNSPECIFIED = 0;
+        STATUS_DISABLED    = 256; // 2^08，禁用账号 JWT拉黑
+    }
+    uint64 account_id  = 1 [(gotag.tags) = 'gorm:"primaryKey;autoIncrement:false"'];
+
+    uint64 status  = 2;
+    Type type = 3;
+
+    string phone         = 4;
+    string feishu_openid = 5;
+    string feishu_unionid  = 6;
+    string feishu_nickname = 7;
+    string feishu_avatar   = 8;
+
+    TimeAT time_at = 100 [(gotag.tags) = 'gorm:"embedded"'];
+}

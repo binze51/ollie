@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "_common/gotag/options.proto";
+
+package account;
+option go_package = "ollie/kitex_gen/account;account";
+
+
+//时间通用
+message TimeAT {
+	int64 update_at = 1 [(gotag.tags) = 'gorm:"autoUpdateTime:milli"'];
+	int64 create_at = 2 [(gotag.tags) = 'gorm:"autoCreateTime"'];
+	int64 delete_at = 3; //非零则被删除
+}
+
+
+message LoginInfo {
+	string userName = 1;
+	string phone = 2;
+	string req_token =3;
+	uint64 expires_at = 4;
+
+	string reflesh_token =5;
+	uint64 reflesh_expires_at = 6;
+
+  }
+
+  

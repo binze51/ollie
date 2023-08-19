@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "_common/gotag/options.proto";
+import "_common/respstatus/resp.proto";
+import "account/t_info.proto";
+import "account/vo.proto";
+import "google/api/annotations.proto";
+
+package account;
+option go_package = "ollie/kitex_gen/account;account";
+
+service AccountService {
+  //扫码登录获取用户信息 合成一个接口
+  rpc LoginQR(GetLoginQRRequest) returns (GetLoginQRResponse) {
+    option (google.api.http) = {
+      post: "/api/AccountService/GetLoginQR"
+    };
+  }
+
+
+  //前端自己刷新token
+  rpc RefreshJwtToken(RefreshJwtTokenRequest) returns (RefreshJwtTokenResponse) {
+    option (google.api.http) = {
+      post: "/api/AccountService/RefreshJwtToken"
+    };
+  }
+
+}
+
+
+
+message GetLoginQRRequest {
+  string redirect_url = 1; //授权重定向
+  string code = 2; //授权code
+}
+
+message GetLoginQRResponse {
+  LoginInfo info = 1;
+  respstatus.StatusResp status =2;
+}
+
+
+
+message RefreshJwtTokenRequest {
+  string reflesh_token = 1;
+}
+
+message RefreshJwtTokenResponse {
+  LoginInfo info = 1;
+  respstatus.StatusResp status =2;
+}
+
+
+
+
