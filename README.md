@@ -131,6 +131,10 @@ todo
 ├── README.md
 ```
 
+
 TODO
+- [√] 独立casbin网关鉴权服务
+- [√] 飞书app扫码登录接口
+- [√] 业务响应状态码扩展
 - [] proto目录repo里 自动化gitsubmodle同名分支切换
 - [] 补齐基于istio网关部署拓朴

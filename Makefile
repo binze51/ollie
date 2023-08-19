@@ -31,15 +31,13 @@ pushproto: ## [提交本地proto到远端], example: `make pushproto`
 
 
 ## 本地构建容器镜像 ##
-# TODO
-## VERSION : <tag>[-<distance>-g<commit-hash>] 
-## v2.123.0-1-gb5e62be973 tag是全局的 commit也是全局的 这个地方可以自动获取下一个版本号，不需要维护发版分支版本号
+
 VERSION := $(shell git describe --tags --always)
 # VERSION:=v1.1.1
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
-REGISTRY := ccr.ccs.tencentyun.com/back_end
+REGISTRY := <你的imagehub地址>
 ### image build push ###
 imagebuildpublish: ## [PODMAN BUIDL AND PUSH] ,example: `make imagebuildpublish service=authx`
-	# @echo 'publish $(VERSION) to $(REGISTRY)'
-	@podman build -f Dockerfile --no-cache --build-arg SERVICE=$(service) --build-arg VERSION=$(VERSION) --build-arg GIT_COMMIT=$(GIT_COMMIT) -t $(REGISTRY)/cicd-dev-$(service):$(VERSION) .
-	# @podman push $(REGISTRY)/cicd-dev-$(service):$(VERSION)
+	@echo 'publish $(VERSION) to $(REGISTRY)'
+	@podman build -f Dockerfile --no-cache --build-arg SERVICE=$(service) --build-arg VERSION=$(VERSION) --build-arg GIT_COMMIT=$(GIT_COMMIT) -t $(REGISTRY)/ollie-$(service):$(VERSION) .
+	@podman push $(REGISTRY)/ollie-$(service):$(VERSION)
