@@ -5,8 +5,8 @@ import (
 	"context"
 	"net"
 
-	"ollie/app/grpc-authx/service"
-	"ollie/kitex_gen/authx/authxservice"
+	"ollie/app/grpc-account/service"
+	"ollie/kitex_gen/account/accountservice"
 	"ollie/pkg/config"
 	"ollie/pkg/logger"
 	"ollie/pkg/shutdown"
@@ -45,7 +45,7 @@ func main() {
 	// defer p.Shutdown(context.Background())
 
 	opts := kitexOpts()
-	svr := authxservice.NewServer(serviceContainer, opts...)
+	svr := accountservice.NewServer(serviceContainer, opts...)
 
 	err = svr.Run()
 	if err != nil {

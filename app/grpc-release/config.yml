@@ -1,5 +1,5 @@
 app:
-  nort: 7002
+  port: 7002
   name: rlease
   logPath: logs/rlease
   tickDuration: 5

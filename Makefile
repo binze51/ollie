@@ -17,8 +17,12 @@ gen:  ## [生成proto指定服务代码], example: `make gen service=release`
 build_all_pb: ## [生成包含所有服务的pb自描述文件], example: `make build_all_pb`
 	buf build -o all.pb
 
-## 本地操作proto repo指令 ##
-## subtree 操作可以是同名分支，默认是main分支
+list_grpc_service: ## [列出本项目所有grpc服务信息], example: `make list_grpc_service`
+	@buf build -o all.pb
+	grpcurl -protoset all.pb list
+
+## 本地操作proto repo submodle指令 ##
+## submodle 操作可以是同名分支，默认是main分支
 
 addproto: ## [保存本地proto修改], example: `make addproto`
 	@git subtree add --prefix=proto git@gitlab.com:back_end9494529/proto.git master

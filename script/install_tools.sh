@@ -19,3 +19,8 @@ if ! command -v kitex &> /dev/null
 then
     go install github.com/cloudwego/kitex/tool/cmd/kitex@v0.6.1
 fi
+
+if ! command -v grpcurl &> /dev/null
+then
+    go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+fi
