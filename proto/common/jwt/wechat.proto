@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package jwt;
 
-option go_package = "ollie/kitex_gen/_commton/jwt;jwt";
+option go_package = "ollie/kitex_gen/commton/jwt";
 
 service WechatWorkerService {
     rpc GetLoginQR(GetLoginQRRequest) returns (GetLoginQRResponse) {}

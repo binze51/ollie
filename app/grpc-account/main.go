@@ -12,8 +12,8 @@ import (
 	"ollie/pkg/shutdown"
 
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 	"github.com/spf13/viper"
 )
@@ -56,7 +56,7 @@ func kitexOpts() (opts []server.Option) {
 	}
 	// server side middleware
 	opts = append(opts, server.WithServiceAddr(addr),
-		server.WithLimit(&limit.Option{MaxConnections: viper.GetInt("app.limit.maxConnects"), MaxQPS: viper.GetInt("app.limit.maxQPS")}),
+		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
 		// server.WithSuite(tracing.NewServerSuite()),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: viper.GetString("app.name")}),
 	)

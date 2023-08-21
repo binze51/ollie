@@ -5,7 +5,7 @@ package release;
 import "google/api/annotations.proto";
 import "release/t_info.proto";
 import "release/vo.proto";
-import "_common/respstatus/resp.proto";
+import "common/respstatus/resp.proto";
 
 option go_package = "ollie/kitex_gen/release;release";
 

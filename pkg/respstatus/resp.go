@@ -3,7 +3,7 @@ package respstatus
 import (
 	"errors"
 
-	"ollie/kitex_gen/_common/respstatus"
+	"ollie/kitex_gen/common/respstatus"
 )
 
 // BuildStatusResp build StatusResp from error

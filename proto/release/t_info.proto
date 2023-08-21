@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package release;
 
-import "_common/gotag/options.proto";
+import "common/gotag/options.proto";
 import "google/protobuf/timestamp.proto";
 import "release/vo.proto";
 

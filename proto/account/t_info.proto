@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-import "_common/gotag/options.proto";
-import "_common/validtor/validtor.proto";
+import "common/gotag/options.proto";
+import "common/validtor/validtor.proto";
 import "google/protobuf/timestamp.proto";
 import "account/vo.proto";
 

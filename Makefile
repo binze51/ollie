@@ -8,11 +8,10 @@ help:
 ## 服务生成命令 ##
 gen:  ## [生成proto指定服务代码], example: `make gen service=release`
 	# buf breaking --against '.git#branch=master,subdir=proto'
-	@buf generate --path proto/$(service)
-	@kitex -module ollie -type protobuf -no-fast-api -I proto/  ./proto/$(service)/service.proto
+	@kitex -module ollie -type protobuf -I proto/  ./proto/$(service)/service.proto
 	@buf generate --template buf.gen.tag.yaml --path proto/$(service)
 	@buf generate --template buf.gen.validator.yaml --path proto/$(service)
-	@go mod tidy
+	# @go mod tidy
 
 build_all_pb: ## [生成包含所有服务的pb自描述文件], example: `make build_all_pb`
 	buf build -o all.pb

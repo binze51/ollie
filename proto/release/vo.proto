@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package release;
 
-import "_common/gotag/options.proto";
+import "common/gotag/options.proto";
 
 option go_package = "ollie/kitex_gen/release;release";
 

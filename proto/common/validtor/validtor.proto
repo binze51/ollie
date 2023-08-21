@@ -4,7 +4,7 @@ package validtor;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "_common/validtor";
+option go_package = "common/validtor";
 
 //本文件是简化版的byteapi protobuf idl注解
 

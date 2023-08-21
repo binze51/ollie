@@ -4,7 +4,7 @@ package gotag;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "ollie/kitex_gen/_common/gotag;gotag";
+option go_package = "ollie/kitex_gen/common/gotag";
 
 // Tags are applied at the field level
 extend google.protobuf.FieldOptions {

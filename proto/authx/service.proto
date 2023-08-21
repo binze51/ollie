@@ -3,7 +3,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
-import "_common/gotag/options.proto";
+import "common/gotag/options.proto";
 
 package authx;
 option go_package = "ollie/kitex_gen/authx;authx";

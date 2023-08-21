@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "_common/gotag/options.proto";
+import "common/gotag/options.proto";
 import "google/protobuf/timestamp.proto";
 
 package authx;
