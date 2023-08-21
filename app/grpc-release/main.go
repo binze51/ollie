@@ -30,10 +30,6 @@ func main() {
 		panic(err)
 	}
 	defer shutdown.GracefulStop(cancel, serviceContainer.Close)
-	// wechatworker.WxWorkerApp, err = wechatworker.NewWorkwxApp(wechatworker.GetWxWorkerConfig.CorpId, wechatworker.GetWxWorkerConfig.OrpSecret, wechatworker.GetWxWorkerConfig.AgentId)
-	// if err != nil {
-	// 	panic(err)
-	// }
 	// go serviceContainer.LoopTickFunc(ctx)
 
 	// otel provider

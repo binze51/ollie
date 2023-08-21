@@ -11,6 +11,9 @@ const (
 var (
 	LoginErr = respstatus.NewErrNo(ACCOUNT_ERROR_NO, "Wrong username or password")
 
-	AccountNotExistErr     = respstatus.NewErrNo(ACCOUNT_ERROR_NO+1, "User does not exists")
-	AccountAlreadyExistErr = respstatus.NewErrNo(ACCOUNT_ERROR_NO+2, "User already exists")
+	AccountNotExistErr          = respstatus.NewErrNo(ACCOUNT_ERROR_NO+1, "User does not exists")
+	AccountGetFeiShuCodeErr     = respstatus.NewErrNo(ACCOUNT_ERROR_NO+2, "Get feishu code err")
+	AccountGetFeiShuUserInfoErr = respstatus.NewErrNo(ACCOUNT_ERROR_NO+3, "Get feishu user info err")
+
+	AccountRefreshTokenErr = respstatus.NewErrNo(ACCOUNT_ERROR_NO+4, "Get feishu user info err")
 )

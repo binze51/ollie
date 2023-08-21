@@ -13,13 +13,13 @@ import (
 func (h *ServiceImpl) LoginQR(ctx context.Context, req *account.GetLoginQRRequest) (resp *account.GetLoginQRResponse, err error) {
 	toekn, err := getAccessTokenByCode(req.Code, req.RedirectUrl)
 	if err != nil {
-		resp.Status = respstatus.BuildStatusResp(AccountNotExistErr)
+		resp.Status = respstatus.BuildStatusResp(AccountGetFeiShuCodeErr)
 		return
 	}
 	fmt.Println(toekn.AccessToken)
 	info, err := getUserinfo(toekn.AccessToken)
 	if err != nil {
-		resp.Status = respstatus.BuildStatusResp(AccountNotExistErr)
+		resp.Status = respstatus.BuildStatusResp(AccountGetFeiShuUserInfoErr)
 		return
 	}
 	jwtClaims := &pkg.JwtClaims{
@@ -44,8 +44,7 @@ func (h *ServiceImpl) LoginQR(ctx context.Context, req *account.GetLoginQRReques
 func (h *ServiceImpl) RefreshJwtToken(ctx context.Context, req *account.RefreshJwtTokenRequest) (resp *account.RefreshJwtTokenResponse, err error) {
 	jwtPayload, err := pkg.RefreshJwtToken(req.RefleshToken)
 	if err != nil {
-		resp.Status.Code = AccountNotExistErr.ErrCode
-		resp.Status.Msg = AccountNotExistErr.Error()
+		resp.Status = respstatus.BuildStatusResp(AccountRefreshTokenErr)
 		return
 	}
 	resp.Info = &account.LoginInfo{
