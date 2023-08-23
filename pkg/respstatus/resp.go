@@ -6,8 +6,8 @@ import (
 	"ollie/kitex_gen/common/respstatus"
 )
 
-// BuildStatusResp build StatusResp from error
-func BuildStatusResp(err error) *respstatus.StatusResp {
+// ErrStatusResp build StatusResp from error
+func ErrStatusResp(err error) *respstatus.StatusResp {
 	if err == nil {
 		return baseResp(Success)
 	}

@@ -11,15 +11,16 @@ import (
 
 // LoginQR 开放接口
 func (h *ServiceImpl) LoginQR(ctx context.Context, req *account.GetLoginQRRequest) (resp *account.GetLoginQRResponse, err error) {
+	resp = new(account.GetLoginQRResponse)
 	toekn, err := getAccessTokenByCode(req.Code, req.RedirectUrl)
 	if err != nil {
-		resp.Status = respstatus.BuildStatusResp(AccountGetFeiShuCodeErr)
+		resp.Status = respstatus.ErrStatusResp(AccountGetFeiShuCodeErr)
 		return
 	}
 	fmt.Println(toekn.AccessToken)
 	info, err := getUserinfo(toekn.AccessToken)
 	if err != nil {
-		resp.Status = respstatus.BuildStatusResp(AccountGetFeiShuUserInfoErr)
+		resp.Status = respstatus.ErrStatusResp(AccountGetFeiShuUserInfoErr)
 		return
 	}
 	jwtClaims := &pkg.JwtClaims{
@@ -36,15 +37,16 @@ func (h *ServiceImpl) LoginQR(ctx context.Context, req *account.GetLoginQRReques
 		RefleshToken:     jwtPayload.RefleshToken,
 		RefleshExpiresAt: jwtPayload.RefleshExpiresAt,
 	}
-	resp.Status = respstatus.BuildStatusResp(respstatus.Success)
+	resp.Status = respstatus.ErrStatusResp(nil)
 	return
 }
 
 // RefreshJwtToken 开放接口
 func (h *ServiceImpl) RefreshJwtToken(ctx context.Context, req *account.RefreshJwtTokenRequest) (resp *account.RefreshJwtTokenResponse, err error) {
+	resp = new(account.RefreshJwtTokenResponse)
 	jwtPayload, err := pkg.RefreshJwtToken(req.RefleshToken)
 	if err != nil {
-		resp.Status = respstatus.BuildStatusResp(AccountRefreshTokenErr)
+		resp.Status = respstatus.ErrStatusResp(AccountRefreshTokenErr)
 		return
 	}
 	resp.Info = &account.LoginInfo{
@@ -56,6 +58,6 @@ func (h *ServiceImpl) RefreshJwtToken(ctx context.Context, req *account.RefreshJ
 		RefleshToken:     jwtPayload.RefleshToken,
 		RefleshExpiresAt: jwtPayload.RefleshExpiresAt,
 	}
-	resp.Status = respstatus.BuildStatusResp(respstatus.Success)
+	resp.Status = respstatus.ErrStatusResp(nil)
 	return
 }
