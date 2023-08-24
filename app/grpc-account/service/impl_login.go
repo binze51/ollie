@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"ollie/app/grpc-account/pkg"
 	"ollie/kitex_gen/account"
@@ -12,13 +11,12 @@ import (
 // LoginQR 开放接口
 func (h *ServiceImpl) LoginQR(ctx context.Context, req *account.GetLoginQRRequest) (resp *account.GetLoginQRResponse, err error) {
 	resp = new(account.GetLoginQRResponse)
-	toekn, err := getAccessTokenByCode(req.Code, req.RedirectUrl)
+	accessToken, err := getAccessTokenByCode(req.Code, req.RedirectUrl)
 	if err != nil {
 		resp.Status = respstatus.ErrStatusResp(AccountGetFeiShuCodeErr)
 		return
 	}
-	fmt.Println(toekn.AccessToken)
-	info, err := getUserinfo(toekn.AccessToken)
+	info, err := getUserinfo(accessToken.AccessToken)
 	if err != nil {
 		resp.Status = respstatus.ErrStatusResp(AccountGetFeiShuUserInfoErr)
 		return

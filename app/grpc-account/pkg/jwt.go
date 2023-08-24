@@ -5,15 +5,13 @@ package pkg
 // 权限设计部分：身份验证(jwt) 和 请求鉴权(casbin)
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"time"
 
 	account "ollie/kitex_gen/account"
+
+	"ollie/pkg/utils"
 
 	jwtV5 "github.com/golang-jwt/jwt/v5"
 )
@@ -30,14 +28,14 @@ func CreateJwtToken(claims *JwtClaims) (*account.LoginInfo, error) {
 	// 请求token生成
 	expiresAt := time.Now().Add(1 * time.Hour)
 	claims.RegisteredClaims.ExpiresAt = jwtV5.NewNumericDate(expiresAt)
-	jwtToken := jwtV5.NewWithClaims(jwtV5.SigningMethodHS512, claims)
+	jwtToken := jwtV5.NewWithClaims(jwtV5.SigningMethodHS256, claims)
 	token, err := jwtToken.SignedString([]byte(jwtKey))
 	if err != nil {
 		return nil, err
 	}
 	jwtKeyByte := []byte(jwtKey)
 	tokenBtye := []byte(token)
-	encryptedData, err := encrypt(jwtKeyByte, tokenBtye)
+	encryptedData, err := utils.Encrypt(jwtKeyByte, tokenBtye)
 	if err != nil {
 		return nil, err
 	}
@@ -45,15 +43,15 @@ func CreateJwtToken(claims *JwtClaims) (*account.LoginInfo, error) {
 
 	// 刷新token生成
 	refleshExpiresAt := expiresAt.Add(2 * time.Hour)
-	refleshJwtClaims := new(JwtClaims)
+	refleshJwtClaims := claims
 	refleshJwtClaims.RegisteredClaims.ExpiresAt = jwtV5.NewNumericDate(refleshExpiresAt)
-	refleshjwtToken := jwtV5.NewWithClaims(jwtV5.SigningMethodHS512, refleshJwtClaims)
+	refleshjwtToken := jwtV5.NewWithClaims(jwtV5.SigningMethodHS256, refleshJwtClaims)
 	refleshtoken, err := refleshjwtToken.SignedString([]byte(jwtKey))
 	if err != nil {
 		return nil, err
 	}
 	refleshtokenBtye := []byte(refleshtoken)
-	refleshencryptedData, err := encrypt(jwtKeyByte, refleshtokenBtye)
+	refleshencryptedData, err := utils.Encrypt(jwtKeyByte, refleshtokenBtye)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +84,7 @@ func parseToken(token string) (*JwtClaims, error) {
 	if err != nil {
 		return nil, err
 	}
-	decryptedData, err := decrypt([]byte(jwtKey), encryptedData)
+	decryptedData, err := utils.Decrypt([]byte(jwtKey), encryptedData)
 	if err != nil {
 		return nil, err
 	}
@@ -108,37 +106,4 @@ func parseToken(token string) (*JwtClaims, error) {
 	}
 
 	return claims, nil
-}
-
-func encrypt(key, data []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	ciphertext := make([]byte, aes.BlockSize+len(data))
-	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return nil, err
-	}
-
-	stream := cipher.NewCFBEncrypter(block, iv)
-	stream.XORKeyStream(ciphertext[aes.BlockSize:], data)
-
-	return ciphertext, nil
-}
-
-func decrypt(key, ciphertext []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	iv := ciphertext[:aes.BlockSize]
-	ciphertext = ciphertext[aes.BlockSize:]
-
-	stream := cipher.NewCFBDecrypter(block, iv)
-	stream.XORKeyStream(ciphertext, ciphertext)
-
-	return ciphertext, nil
 }

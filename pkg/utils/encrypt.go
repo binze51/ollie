@@ -1,15 +1,14 @@
 package utils
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
+	"crypto/rand"
 	"crypto/sha1"
 	"crypto/sha256"
-	"encoding/base64"
 	"encoding/hex"
-	"errors"
+	"io"
 )
 
 func HmacSha256(data string, secret []byte) string {
@@ -24,36 +23,35 @@ func HmacSha1(data string, secret []byte) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func PKCS5Padding(src []byte, blockSize int) []byte {
-	padLen := blockSize - len(src)%blockSize
-	padding := bytes.Repeat([]byte{byte(padLen)}, padLen)
-	return append(src, padding...)
-}
-
-func AesCbcBase64(src, productSecret string) (string, error) {
-	if src == "" || productSecret == "" {
-		return "", errors.New("加密参数错误")
-	}
-	// 截取 productSecret 前 16 位作为密钥
-	key := []byte(productSecret)[:16]
-	// 以长度 16 的字符 "0" 作为偏移量
-	iv := bytes.Repeat([]byte("0"), 16)
-
-	data := []byte(src)
-
-	// 使用 AES-CBC 加密
+func Encrypt(key, data []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	// 对补全后的数据进行加密
-	blockSize := block.BlockSize()
-	data = PKCS5Padding(data, blockSize)
-	cryptData := make([]byte, len(data))
-	mode := cipher.NewCBCEncrypter(block, iv)
-	mode.CryptBlocks(cryptData, data)
+	ciphertext := make([]byte, aes.BlockSize+len(data))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
 
-	// 进行 base64 编码
-	return base64.StdEncoding.EncodeToString(cryptData), nil
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], data)
+
+	return ciphertext, nil
+}
+
+func Decrypt(key, ciphertext []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(ciphertext, ciphertext)
+
+	return ciphertext, nil
 }

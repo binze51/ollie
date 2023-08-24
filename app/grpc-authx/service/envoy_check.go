@@ -40,7 +40,7 @@ func (s *ServiceImpl) Check(_ context.Context, request *authv3.CheckRequest) (*a
 	tokenValue, contains := httpAttrs.GetHeaders()[authorization]
 	if contains {
 		// 使用jwt是合法有效
-		jwt, err := s.ParseToken(tokenValue)
+		jwtInfo, err := s.ParseToken(tokenValue)
 		if err != nil {
 			allow = false
 		}
@@ -49,7 +49,7 @@ func (s *ServiceImpl) Check(_ context.Context, request *authv3.CheckRequest) (*a
 		// 这里需要使用jwt里的uid查次库(redis或者内存里)，返回一些用户信息：roles info啥的，并判断是否拉黑字段
 		// user:=s.GetAccountInfo(jwt.ID) jwt.ID=uid
 		// allow = s.batchCheck(user.Roles, httpAttrs.Path, jwt.ID)
-		allow = s.batchCheck("jwt.RolesTODO", httpAttrs.Path, jwt.ID)
+		allow = s.batchCheck("jwt.RolesTODO", httpAttrs.Path, jwtInfo.ID)
 	} else {
 		allow = attrs.Source != nil && strings.HasSuffix(attrs.Source.Principal, "/sa/"+*serviceAccount)
 	}

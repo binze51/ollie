@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -31,7 +32,6 @@ func getUserinfo(feishuAccessTokengo string) (*userInfo, error) {
 	}
 
 	req.Header.Add("Authorization", "Bearer "+feishuAccessTokengo)
-
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -41,10 +41,13 @@ func getUserinfo(feishuAccessTokengo string) (*userInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(body))
-	data := new(userInfo)
-	err = json.Unmarshal(body, data)
-	return data, err
+	user := new(userInfo)
+	err = json.Unmarshal(body, user)
+	if user.Name == "" {
+		err = errors.New(string(body))
+		return nil, err
+	}
+	return user, err
 }
 
 func getAccessTokenByCode(code, redirectURL string) (*tokenInfo, error) {
@@ -58,13 +61,13 @@ func getAccessTokenByCode(code, redirectURL string) (*tokenInfo, error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("2")
-		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println(string(body))
-
-	data := new(tokenInfo)
-	err = json.Unmarshal(body, data)
-	return data, err
+	token := new(tokenInfo)
+	err = json.Unmarshal(body, token)
+	if token.AccessToken == "" {
+		err = errors.New(string(body))
+		return nil, err
+	}
+	return token, err
 }
