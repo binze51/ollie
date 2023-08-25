@@ -1,6 +1,9 @@
 package service
 
 // 表名
-const authxTable = "x_authxs"
+const (
+	authxTable     = "authxs"
+	blacklistTable = "x_blacklists"
+)
 
 // 其他

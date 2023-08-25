@@ -9,3 +9,5 @@
 - 把 accessToken 与 refreshToken 存在 localStorage 中。既然要 JWT ，那就贯彻到底，给服务端彻底减负。
 
 token里 包含用户id，这些不变信息。其他还是需要查次库
+
+docs里业务流程设计图

@@ -28,7 +28,7 @@ RUN go build \
     -ldflags="-w -s" \
     -a -o ${SERVICE} app/grpc-${SERVICE}/main.go
 
-FROM alpine:3.16.2 AS runnerenv
+FROM alpine:3.17 AS runnerenv
 RUN mkdir -p /app
 WORKDIR /app
 ARG SERVICE
