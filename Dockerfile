@@ -39,8 +39,8 @@ ENV SERVICE=${SERVICE}
 ENV VERSION=${VERSION}
 ENV GIT_COMMIT=${GIT_COMMIT}
 
-RUN echo "https://mirrors.aliyun.com/alpine/v3.16/main/" > /etc/apk/repositories \
-    && echo "https://mirrors.aliyun.com/alpine/v3.16/community/" >> /etc/apk/repositories \
+RUN echo "https://mirrors.aliyun.com/alpine/v3.17/main/" > /etc/apk/repositories \
+    && echo "https://mirrors.aliyun.com/alpine/v3.17/community/" >> /etc/apk/repositories \
     && apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime  \
     && echo Asia/Shanghai > /etc/timezone \

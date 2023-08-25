@@ -40,6 +40,7 @@ func InitServiceContainer(ctx context.Context) (*ServiceImpl, error) {
 }
 
 type ServiceImpl struct {
+	// grpc health probe默认实现
 	grpc_health_v1.UnimplementedHealthServer
 	db *gorm.DB
 	// api权限验证器
