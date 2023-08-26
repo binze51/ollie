@@ -10,13 +10,12 @@ import (
 
 // InitConfig - read configfile and ENV variables
 func InitConfig() {
-	viper.SetConfigFile("config.yaml")
-	viper.MergeInConfig()
-	if _, err := os.Stat("biz_config.yaml"); err == nil {
-		viper.SetConfigFile("biz_config.yaml")
-		viper.MergeInConfig()
-	}
+	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
+	viper.SetConfigType("yaml")
+	if _, err := os.Stat("./biz"); err == nil {
+		viper.AddConfigPath("./biz")
+	}
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
