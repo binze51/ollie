@@ -47,6 +47,5 @@ RUN echo "https://mirrors.aliyun.com/alpine/v3.17/main/" > /etc/apk/repositories
     && apk del tzdata
 
 COPY --from=buildenv /app/${SERVICE}  /app/start.sh /app
-RUN chmod +x /app/start.sh
 # COPY --from=buildenv /etc/ssl/certs /etc/ssl/certs
-ENTRYPOINT ["/app/start.sh"]
+ENTRYPOINT ["start.sh"]
