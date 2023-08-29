@@ -28,7 +28,7 @@ RUN go build \
     -ldflags="-w -s" \
     -a -o ${SERVICE} app/grpc-${SERVICE}/main.go
 
-FROM alpine:3.16.2 AS runnerenv
+FROM alpine:3.17 AS runnerenv
 RUN mkdir -p /app
 WORKDIR /app
 ARG SERVICE
@@ -39,8 +39,8 @@ ENV SERVICE=${SERVICE}
 ENV VERSION=${VERSION}
 ENV GIT_COMMIT=${GIT_COMMIT}
 
-RUN echo "https://mirrors.aliyun.com/alpine/v3.16/main/" > /etc/apk/repositories \
-    && echo "https://mirrors.aliyun.com/alpine/v3.16/community/" >> /etc/apk/repositories \
+RUN echo "https://mirrors.aliyun.com/alpine/v3.17/main/" > /etc/apk/repositories \
+    && echo "https://mirrors.aliyun.com/alpine/v3.17/community/" >> /etc/apk/repositories \
     && apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime  \
     && echo Asia/Shanghai > /etc/timezone \
@@ -48,4 +48,4 @@ RUN echo "https://mirrors.aliyun.com/alpine/v3.16/main/" > /etc/apk/repositories
 
 COPY --from=buildenv /app/${SERVICE}  /app/start.sh /app
 # COPY --from=buildenv /etc/ssl/certs /etc/ssl/certs
-ENTRYPOINT ["/app/start.sh"]
+ENTRYPOINT ["./start.sh"]

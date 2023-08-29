@@ -21,7 +21,7 @@ message Account {
         STATUS_UNSPECIFIED = 0;
         STATUS_DISABLED    = 256; // 2^08，禁用账号 JWT拉黑
     }
-    uint64 account_id  = 1 [(gotag.tags) = 'gorm:"primaryKey;autoIncrement:false"'];
+    uint64 account_id  = 1 [(gotag.tags) = 'gorm:"primaryKey;autoIncrement:false;comment:账户id"'];
 
     uint64 status  = 2;
     Type type = 3;

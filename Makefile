@@ -38,9 +38,20 @@ pushproto: ## [提交本地proto到远端], example: `make pushproto`
 VERSION := $(shell git describe --tags --always)
 # VERSION:=v1.1.1
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
-REGISTRY := <你的imagehub地址>
+REGISTRY := ccr.ccs.tencentyun.com
+NS_GROUP := binze
+
+DOCKERFILE :=
+ifeq ($(service), apigateway)
+	DOCKERFILE := Dockerfile-istio-ingressgateway
+else ifeq ($(service), istio-proxy)
+	DOCKERFILE := Dockerfile-istio-proxy
+else
+	DOCKERFILE := Dockerfile
+endif
 ### image build push ###
 imagebuildpublish: ## [PODMAN BUIDL AND PUSH] ,example: `make imagebuildpublish service=authx`
 	@echo 'publish $(VERSION) to $(REGISTRY)'
-	@podman build -f Dockerfile --no-cache --build-arg SERVICE=$(service) --build-arg VERSION=$(VERSION) --build-arg GIT_COMMIT=$(GIT_COMMIT) -t $(REGISTRY)/ollie-$(service):$(VERSION) .
-	@podman push $(REGISTRY)/ollie-$(service):$(VERSION)
+	@podman login ccr.ccs.tencentyun.com --username=100012015939
+	@podman build -f $(DOCKERFILE) --no-cache --build-arg SERVICE=$(service) --build-arg VERSION=$(VERSION) --build-arg GIT_COMMIT=$(GIT_COMMIT) -t $(REGISTRY)/$(NS_GROUP)/ollie-$(service):$(VERSION) .
+	@podman push $(REGISTRY)/$(NS_GROUP)/ollie-$(service):$(VERSION)

@@ -5,3 +5,5 @@ kitex_gen/
 **/rbac_model.conf
 all.pb
 *.log
+Dockerfile-istio-ingressgateway
+Dockerfile-istio-proxy

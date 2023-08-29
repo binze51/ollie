@@ -14,7 +14,7 @@ db:
 casbin:
   #默认为true启用，false禁用时所有请求都放行
   enable: true
-  modelFile: rbac_model.conf
+  modelFile: casbin/rbac_model.conf
   debug: false
   # 是否启用定期自动加载规则策略
   autoLoad: false

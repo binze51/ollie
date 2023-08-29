@@ -38,10 +38,8 @@ func main() {
 	// 	provider.WithInsecure(),
 	// )
 	// defer p.Shutdown(context.Background())
-
 	opts := kitexOpts()
 	svr := accountservice.NewServer(serviceContainer, opts...)
-
 	err = svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
